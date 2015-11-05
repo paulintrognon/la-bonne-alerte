@@ -3,5 +3,11 @@
   "version": "0.0.1",
   "description": "change-me",
   "author": "paulin.trognon@gmail.com",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "winston": "^2.1.0"
+  },
+  "scripts": {
+    "start": "node app/start.js"
+  }
 }
