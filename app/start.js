@@ -1,3 +1,5 @@
 "use strict";
 
-console.log("started!");
+var logger = require("./services/logger.js");
+
+logger.info("Started!");
