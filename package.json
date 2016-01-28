@@ -12,7 +12,7 @@
     "should": "^8.2.1"
   },
   "scripts": {
-    "start": "node app/start.js",
+    "start": "node start.js",
     "test": "mocha --recursive -R spec test"
   }
 }
