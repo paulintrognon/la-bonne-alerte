@@ -1,15 +1,15 @@
 {
-  "name": "change-me",
+  "name": "la-bonne-alerte",
   "version": "0.0.1",
-  "description": "change-me",
+  "description": "Automatic email alerts for leboncoin",
   "author": "paulin.trognon@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "winston": "^2.1.0"
+    "winston": "^2.1.1"
   },
   "devDependencies": {
-    "mocha": "^2.3.3",
-    "should": "^7.1.1"
+    "mocha": "^2.4.4",
+    "should": "^8.2.1"
   },
   "scripts": {
     "start": "node app/start.js",
