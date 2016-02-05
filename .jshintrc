@@ -6,5 +6,6 @@
   "maxdepth": 5,
   "maxlen": 120,
 
-  "node": true
+  "node": true,
+  "esversion": 6
 }
