@@ -5,7 +5,9 @@ module.exports = {
 };
 
 const BPromise = require("bluebird"),
-  nightmareFactory = require("nightmare");
+  hash = require("./hash.js"),
+  nightmareFactory = require("nightmare"),
+  urlHelper = require("url");
 
 function create() {
   const that = {};
@@ -14,7 +16,19 @@ function create() {
 
   return that;
 
+  ////////////////////////////////////////////////////////////
+
   function getItems(url) {
+    return getItemsMetaFromLeboncoin(url)
+      .then(function (items) {
+        return items.map(function addIdToItem(item) {
+          item.id = extractIdFromUrl(item.href);
+          return item;
+        });
+      });
+  }
+
+  function getItemsMetaFromLeboncoin(url) {
     const nightmare = nightmareFactory();
     return new BPromise(function (resolve, reject) {
       /* globals scrollTo */
@@ -46,6 +60,11 @@ function create() {
         .end();
     });
   }
+}
+
+function extractIdFromUrl(url) {
+  const pathname = urlHelper.parse(url).pathname;
+  return hash.md5(pathname);
 }
 
 function getItemsInPage() {
