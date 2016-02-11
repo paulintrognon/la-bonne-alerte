@@ -8,6 +8,9 @@ rules:
   linebreak-style:
     - 2
     - unix
+  no-use-before-define:
+    - 2
+    - nofunc
   semi:
     - 2
     - always
