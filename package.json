@@ -8,6 +8,8 @@
     "bluebird": "^3.2.2",
     "lodash": "^4.2.1",
     "nightmare": "^2.1.6",
+    "nodemailer": "^2.2.1",
+    "nodemailer-mailgun-transport": "^1.0.1",
     "winston": "^2.1.1"
   },
   "devDependencies": {

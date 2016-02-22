@@ -1,11 +1,25 @@
 "use strict";
 
-var leboncoin = require("./services/leboncoin.js").create();
+const config = require("./config/config.json"),
+  nodemailer = require("nodemailer"),
+  mg = require("nodemailer-mailgun-transport");
 
-leboncoin.getItems("http://www.leboncoin.fr/electromenager/offres/rhone_alpes/?f=a&th=1&ps=8&q=four&it=1&location=Lyon")
-  .then(function functionName(items) {
-    items.forEach(function (item) {
-      console.log(item);
-    });
-    console.log("end");
-  });
+const nodemailerMailgun = nodemailer.createTransport(mg({
+  auth: config.email.auth
+}));
+
+nodemailerMailgun.sendMail({
+  from: config.email.from,
+  to: "paulin.trognon@gmail.com", // An array if you have multiple recipients.
+  subject: "Hey you, awesome!",
+  text: "Mailgun rocks, pow pow!"
+}, function (err, info) {
+  if (err) {
+    console.log("Error: " + err);
+  }
+  else {
+    console.log("Response: " + JSON.stringify(info));
+  }
+});
+
+nodemailerMailgun.close();
