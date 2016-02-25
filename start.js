@@ -1,25 +1,13 @@
 "use strict";
 
 const config = require("./config/config.json"),
-  nodemailer = require("nodemailer"),
-  mg = require("nodemailer-mailgun-transport");
+  mailer = require("./services/mailer.js").create({sender: config.email.from, auth: config.email.auth});
 
-const nodemailerMailgun = nodemailer.createTransport(mg({
-  auth: config.email.auth
-}));
-
-nodemailerMailgun.sendMail({
-  from: config.email.from,
-  to: "paulin.trognon@gmail.com", // An array if you have multiple recipients.
+mailer.mail({
+  recipients: "paulin.trognon@gmail.com", // An array if you have multiple recipients.
   subject: "Hey you, awesome!",
   text: "Mailgun rocks, pow pow!"
-}, function (err, info) {
-  if (err) {
-    console.log("Error: " + err);
-  }
-  else {
-    console.log("Response: " + JSON.stringify(info));
-  }
-});
-
-nodemailerMailgun.close();
+})
+  .then(function (res) {
+    console.log(res);
+  });
