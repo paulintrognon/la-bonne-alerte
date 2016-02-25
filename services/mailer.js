@@ -6,12 +6,14 @@ module.exports = {
 
 const BPromise = require("bluebird"),
   nodemailer = require("nodemailer"),
-  mailgun = require("nodemailer-mailgun-transport");
+  mailgun = {
+    generateConfig: require("nodemailer-mailgun-transport")
+  };
 
 function create(specs) {
   const that = {},
     sender = specs.sender,
-    transporter = nodemailer.createTransport(mailgun({
+    transporter = nodemailer.createTransport(mailgun.generateConfig({
       auth: specs.auth
     }));
 
@@ -24,7 +26,7 @@ function create(specs) {
   function mail(parameters) {
     const mailOptions = {
       from: sender,
-      to: parameters.recipient,
+      to: parameters.recipients,
       subject: parameters.subject,
       text: parameters.text,
       html: parameters.html
@@ -35,7 +37,7 @@ function create(specs) {
         if(error) {
           return reject(error);
         }
-        resolve(info.response);
+        resolve(info);
       });
     });
   }
