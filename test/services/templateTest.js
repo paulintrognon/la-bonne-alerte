@@ -2,20 +2,19 @@
 
 describe("template service", function templateServiceSuite() {
   describe("render", renderSuite);
-
-  afterEach(restore);
 });
 
-const _ = require("lodash"),
-  BPromise = require("bluebird"),
-  rewire = require("rewire"),
+const BPromise = require("bluebird"),
+  proxyquire = require("proxyquire"),
   should = require("should/as-function"),
   sinon = require("sinon");
 
-const serviceFactory = rewire("../../services/template.js"),
-  fs = serviceFactory.__get__("fs"),
-  handlebars = serviceFactory.__get__("handlebars"),
-  stubs = {};
+const fs = {},
+  handlebars = {},
+  serviceFactory = proxyquire("../../services/template.js", {
+    fs,
+    handlebars
+  });
 
 function renderSuite() {
   it("should render template using given data", templateTest);
@@ -30,7 +29,7 @@ function renderSuite() {
       expectedRes = `hello ${firstname} ${lastname}!`,
       path = "super-path";
 
-    stubs.readFile = sinon.stub(fs, "readFileAsync").returns(BPromise.resolve(fileContent));
+    fs.readFileAsync = sinon.stub().returns(BPromise.resolve(fileContent));
 
     service.render(path, data)
       .then(function (res) {
@@ -50,8 +49,8 @@ function renderSuite() {
       templateStub = sinon.stub();
 
 
-    stubs.readFile = sinon.stub(fs, "readFileAsync").returns(BPromise.resolve(fileContent));
-    stubs.compile = sinon.stub(handlebars, "compile").returns(templateStub);
+    fs.readFileAsync = sinon.stub().returns(BPromise.resolve(fileContent));
+    handlebars.compile = sinon.stub().returns(templateStub);
     templateStub.withArgs(data1).returns(expectedRes1);
     templateStub.withArgs(data2).returns(expectedRes2);
 
@@ -67,10 +66,10 @@ function renderSuite() {
           });
       })
       .then(function (res) {
-        should(stubs.readFile.callCount).equal(1);
-        should(stubs.readFile.firstCall.args[0]).endWith("/../templates/" + path);
-        should(stubs.compile.callCount).equal(1);
-        should(stubs.compile.firstCall.args[0]).equal(fileContent);
+        should(fs.readFileAsync.callCount).equal(1);
+        should(fs.readFileAsync.firstCall.args[0]).endWith("/../templates/" + path);
+        should(handlebars.compile.callCount).equal(1);
+        should(handlebars.compile.firstCall.args[0]).equal(fileContent);
         should(templateStub.callCount).equal(3);
         should(templateStub.firstCall.args[0]).equal(data1);
         should(templateStub.secondCall.args[0]).equal(data2);
@@ -81,8 +80,4 @@ function renderSuite() {
       })
       .then(done, done);
   }
-}
-
-function restore() {
-  _.forOwn(stubs, (stub) => stub.restore());
 }
