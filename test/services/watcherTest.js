@@ -7,15 +7,17 @@ describe("watcher service", function () {
 const BPromise = require("bluebird"),
   should = require("should/as-function"),
   sinon = require("sinon"),
-  rewire = require("rewire");
+  proxyquire = require("proxyquire");
 
 function test(done) {
-  const serviceFactory = rewire("../../services/watcher.js"),
-    callback = sinon.stub(),
-    getItemsStub = sinon.stub(),
+  const getItemsStub = sinon.stub(),
     fakeLeboncoin = {
       getItems: getItemsStub
     },
+    serviceFactory = proxyquire("../../services/watcher.js", {
+      "./leboncoin.js": {create : () => fakeLeboncoin}
+    }),
+    callback = sinon.stub(),
     parameters = {
       delay: (1/60/2),
       callback,
@@ -24,8 +26,6 @@ function test(done) {
     firstItems = [{id: 1}],
     secondItems = [{id: 1}, {id: 2}],
     thirdItems = [{id: 2}, {id: 3}];
-
-  serviceFactory.__set__("leboncoinFactory", {create: () => fakeLeboncoin});
 
   getItemsStub.onFirstCall().returns(BPromise.resolve(firstItems));
   getItemsStub.onSecondCall().returns(BPromise.resolve(secondItems));

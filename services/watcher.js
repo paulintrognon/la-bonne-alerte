@@ -4,7 +4,7 @@ module.exports = {
   create
 };
 
-var itemMonitorFactory = require("./itemMonitor.js"),
+const itemMonitorFactory = require("./itemMonitor.js"),
   leboncoinFactory = require("./leboncoin.js");
 
 function create() {
