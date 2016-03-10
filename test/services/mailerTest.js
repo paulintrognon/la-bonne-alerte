@@ -3,15 +3,17 @@
 describe("mailerService", function () {
   it("should create a mailgun transport", mailgunTransportTest);
   describe(".mail", mailSuite);
-
-  afterEach(restore);
 });
 
-const _ = require("lodash"),
-  rewire = require("rewire"),
+const proxyquire = require("proxyquire"),
   should = require("should/as-function"),
   sinon = require("sinon"),
-  stubs = {};
+  nodemailer = {},
+  mailgunConfigStub = sinon.stub(),
+  serviceFactory = proxyquire("../../services/mailer.js", {
+    nodemailer,
+    "nodemailer-mailgun-transport": mailgunConfigStub
+  });
 
 const sender = "super-sender",
   auth = {
@@ -20,19 +22,24 @@ const sender = "super-sender",
   };
 
 function mailgunTransportTest() {
-  createService();
+  nodemailer.createTransport = sinon.stub().returns("generated-transport");
+  mailgunConfigStub.returns("generated-mailgun-config");
 
-  should(stubs.generateConfig.callCount).equal(1);
-  should(stubs.generateConfig.firstCall.args[0]).have.property("auth", auth);
-  should(stubs.nodemailerTransportFactory.callCount).equal(1);
-  should(stubs.nodemailerTransportFactory.firstCall.args[0]).equal("generated-mailgun-config");
+  serviceFactory.create({auth, sender});
+
+  should(mailgunConfigStub.callCount).equal(1);
+  should(mailgunConfigStub.firstCall.args[0]).have.property("auth", auth);
+  should(nodemailer.createTransport.callCount).equal(1);
+  should(nodemailer.createTransport.firstCall.args[0]).equal("generated-mailgun-config");
 }
 
 function mailSuite() {
   it("should call transporter.sendMail and wrap in promise", mailgunTransportTest);
 
   function mailgunTransportTest(done) {
-    const service = createService(),
+    const sendMailStub = stubNodeMailer();
+
+    const service = serviceFactory.create({auth, sender}),
       params = {
         recipients: "super-recipients",
         subject: "super-subject",
@@ -42,8 +49,8 @@ function mailSuite() {
 
     service.mail(params)
       .then(function (res) {
-        should(stubs.sendMail.callCount).equal(1);
-        should(stubs.sendMail.firstCall.args[0]).eql({
+        should(sendMailStub.callCount).equal(1);
+        should(sendMailStub.firstCall.args[0]).eql({
           from: sender,
           html: params.html,
           subject: params.subject,
@@ -56,26 +63,13 @@ function mailSuite() {
   }
 }
 
-function createService() {
-  var serviceFactory = rewire("../../services/mailer.js"),
-    nodemailer = serviceFactory.__get__("nodemailer"),
-    mailgun = serviceFactory.__get__("mailgun"),
-    service;
-
-  var transport = {
+function stubNodeMailer() {
+  const transport = {
     sendMail: () => undefined
   };
 
-  stubs.sendMail = sinon.stub(transport, "sendMail", (options, callback) => callback(null, "send-mail-info"));
-  stubs.nodemailerTransportFactory = sinon.stub(nodemailer, "createTransport").returns(transport);
+  const sendMailStub = sinon.stub(transport, "sendMail", (options, callback) => callback(null, "send-mail-info"));
+  nodemailer.createTransport = sinon.stub().returns(transport);
 
-  stubs.generateConfig = sinon.stub(mailgun, "generateConfig").returns("generated-mailgun-config");
-
-  service = serviceFactory.create({sender, auth});
-
-  return service;
-}
-
-function restore() {
-  _.forOwn(stubs, (stub) => stub.restore());
+  return sendMailStub;
 }

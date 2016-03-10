@@ -6,14 +6,12 @@ module.exports = {
 
 const BPromise = require("bluebird"),
   nodemailer = require("nodemailer"),
-  mailgun = {
-    generateConfig: require("nodemailer-mailgun-transport")
-  };
+  generateMailGunConfig =  require("nodemailer-mailgun-transport");
 
 function create(specs) {
   const that = {},
     sender = specs.sender,
-    transporter = nodemailer.createTransport(mailgun.generateConfig({
+    transporter = nodemailer.createTransport(generateMailGunConfig({
       auth: specs.auth
     }));
 
