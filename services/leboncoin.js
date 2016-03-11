@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 module.exports = {
-  create
+  create,
 };
 
-const BPromise = require("bluebird"),
-  hash = require("./hash.js"),
-  nightmareFactory = require("nightmare"),
-  urlHelper = require("url");
+const BPromise = require('bluebird');
+const hash = require('./hash.js');
+const nightmareFactory = require('nightmare');
+const urlHelper = require('url');
 
 function create() {
   const that = {};
@@ -16,44 +16,37 @@ function create() {
 
   return that;
 
-  ////////////////////////////////////////////////////////////
+  //----------------------------------------------------------
 
   function getItems(url) {
     return getItemsMetaFromLeboncoin(url)
-      .then(function (items) {
-        return items.map(function addIdToItem(item) {
-          item.id = extractIdFromUrl(item.href);
-          return item;
-        });
-      });
+      .then((items) => items.map(addIdToItem));
+
+    function addIdToItem(item) {
+      item.id = extractIdFromUrl(item.href);
+      return item;
+    }
   }
 
   function getItemsMetaFromLeboncoin(url) {
     const nightmare = nightmareFactory();
-    return new BPromise(function (resolve, reject) {
+    return new BPromise((resolve, reject) => {
       /* globals scrollTo */
       nightmare
         .goto(url)
-        .evaluate(function () {
-          scrollTo(0, 2000);
-        })
+        .evaluate(() => scrollTo(0, 2000))
         .wait(500)
-        .evaluate(function () {
-          scrollTo(0, 3000);
-        })
+        .evaluate(() => scrollTo(0, 3000))
         .wait(500)
-        .evaluate(function () {
-          scrollTo(0, 4000);
-        })
+        .evaluate(() => scrollTo(0, 4000))
         .wait(500)
-        .evaluate(function () {
-          scrollTo(0, 5000);
-        })
+        .evaluate(() => scrollTo(0, 5000))
         .wait(500)
         .evaluate(getItemsInPage)
-        .run(function (err, result) {
+        .run((err, result) => {
           if (err) {
-            return reject(err);
+            reject(err);
+            return;
           }
           resolve(result);
         })
@@ -70,15 +63,15 @@ function extractIdFromUrl(url) {
 function getItemsInPage() {
   /* globals $ */
   var elements = [];
-  $(".list-lbc").children("a").each(function () {
-    var $element = $(this),
-      element = {
-        name: $element.prop("title"),
-        href: $element.prop("href"),
-        location: $(".placement", $element).first().text().replace(/[ \n\t]+/g, " ").trim(),
-        price: $(".price", $element).first().text().replace(/[ \n\t]+/g, " ").trim(),
-        imageUrl: $(".lbc .image .image-and-nb img", $element).prop("src")
-      };
+  $('.list-lbc').children('a').each(function () {
+    var $element = $(this);
+    var element = {
+      name: $element.prop('title'),
+      href: $element.prop('href'),
+      location: $('.placement', $element).first().text().replace(/[ \n\t]+/g, ' ').trim(),
+      price: $('.price', $element).first().text().replace(/[ \n\t]+/g, ' ').trim(),
+      imageUrl: $('.lbc .image .image-and-nb img', $element).prop('src')
+    };
 
     elements.push(element);
   });

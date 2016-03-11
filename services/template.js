@@ -1,39 +1,35 @@
-"use strict";
+'use strict';
 
 module.exports = {
-  create
+  create,
 };
 
-const BPromise = require("bluebird"),
-  fs = BPromise.promisifyAll(require("fs")),
-  handlebars = require("handlebars"),
-  templatesDir = __dirname + "/../templates";
+const BPromise = require('bluebird');
+const fs = BPromise.promisifyAll(require('fs'));
+const handlebars = require('handlebars');
+const templatesDir = `${__dirname} '/../templates`;
 
 function create() {
-  const that = {},
-    templates = {},
-    readFilePromises = {};
+  const that = {};
+  const templates = {};
+  const readFilePromises = {};
 
   that.render = render;
 
   return that;
 
-  ////////////////////////////////////////////////////////////
+  //----------------------------------------------------------
 
   function render(templatePath, data) {
     return getTemplate(templatePath)
-      .then(function (template) {
-        return template(data);
-      });
+      .then((template) => template(data));
   }
 
-  ////////////////////////////////////////////////////////////
+  //----------------------------------------------------------
 
   function getTemplate(templatePath) {
     return addToTemplatesIfNotAlreadyAdded(templatePath)
-      .then(function () {
-        return templates[templatePath];
-      });
+      .then(() => templates[templatePath]);
   }
 
   function addToTemplatesIfNotAlreadyAdded(templatePath) {
@@ -51,8 +47,8 @@ function create() {
   }
 
   function readFileThenAddToTemplates(templatePath) {
-    return fs.readFileAsync(templatesDir + "/" + templatePath, "utf8")
-      .then(function (content) {
+    return fs.readFileAsync(`${templatesDir}/${templatePath}`, 'utf8')
+      .then((content) => {
         templates[templatePath] = handlebars.compile(content);
         readFilePromises[templatePath] = false;
       });

@@ -14,6 +14,8 @@
     "winston": "^2.1.1"
   },
   "devDependencies": {
+    "eslint": "^2.3.0",
+    "eslint-config-airbnb": "^6.1.0",
     "mocha": "^2.4.4",
     "proxyquire": "^1.7.4",
     "should": "^8.2.2",

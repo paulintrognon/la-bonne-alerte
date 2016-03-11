@@ -1,63 +1,63 @@
-"use strict";
+'use strict';
 
-describe("mailerService", function () {
-  it("should create a mailgun transport", mailgunTransportTest);
-  describe(".mail", mailSuite);
+describe('mailerService', () => {
+  it('should create a mailgun transport', mailgunTransportTest);
+  describe('.mail', mailSuite);
 });
 
-const proxyquire = require("proxyquire"),
-  should = require("should/as-function"),
-  sinon = require("sinon"),
-  nodemailer = {},
-  mailgunConfigStub = sinon.stub(),
-  serviceFactory = proxyquire("../../services/mailer.js", {
-    nodemailer,
-    "nodemailer-mailgun-transport": mailgunConfigStub
-  });
+const proxyquire = require('proxyquire');
+const should = require('should/as-function');
+const sinon = require('sinon');
+const nodemailer = {};
+const mailgunConfigStub = sinon.stub();
+const serviceFactory = proxyquire('../../services/mailer.js', {
+  nodemailer,
+  'nodemailer-mailgun-transport': mailgunConfigStub,
+});
 
-const sender = "super-sender",
-  auth = {
-    api_key: "super-key",
-    domain: "super-domain"
-  };
+const sender = 'super-sender';
+const auth = {
+  api_key: 'super-key',
+  domain: 'super-domain',
+};
 
 function mailgunTransportTest() {
-  nodemailer.createTransport = sinon.stub().returns("generated-transport");
-  mailgunConfigStub.returns("generated-mailgun-config");
+  nodemailer.createTransport = sinon.stub().returns('generated-transport');
+  mailgunConfigStub.returns('generated-mailgun-config');
 
-  serviceFactory.create({auth, sender});
+  serviceFactory.create({ auth, sender });
 
   should(mailgunConfigStub.callCount).equal(1);
-  should(mailgunConfigStub.firstCall.args[0]).have.property("auth", auth);
+  should(mailgunConfigStub.firstCall.args[0]).have.property('auth', auth);
   should(nodemailer.createTransport.callCount).equal(1);
-  should(nodemailer.createTransport.firstCall.args[0]).equal("generated-mailgun-config");
+  should(nodemailer.createTransport.firstCall.args[0]).equal('generated-mailgun-config');
 }
 
 function mailSuite() {
-  it("should call transporter.sendMail and wrap in promise", mailgunTransportTest);
+  it('should call transporter.sendMail and wrap in promise', sendMailTest);
 
-  function mailgunTransportTest(done) {
+  function sendMailTest(done) {
     const sendMailStub = stubNodeMailer();
 
-    const service = serviceFactory.create({auth, sender}),
-      params = {
-        recipients: "super-recipients",
-        subject: "super-subject",
-        text: "super-text",
-        html: "super-html"
-      };
+    const service = serviceFactory.create({ auth, sender });
+    const params = {
+      recipients: 'super-recipients',
+      subject: 'super-subject',
+      text: 'super-text',
+      html: 'super-html',
+    };
 
     service.mail(params)
-      .then(function (res) {
+      .then((res) => {
         should(sendMailStub.callCount).equal(1);
         should(sendMailStub.firstCall.args[0]).eql({
           from: sender,
           html: params.html,
           subject: params.subject,
           text: params.text,
-          to: params.recipients
+          to: params.recipients,
         });
-        should(res).equal("send-mail-info");
+        should(res).equal('send-mail-info');
       })
       .then(done, done);
   }
@@ -65,10 +65,10 @@ function mailSuite() {
 
 function stubNodeMailer() {
   const transport = {
-    sendMail: () => undefined
+    sendMail: () => undefined,
   };
 
-  const sendMailStub = sinon.stub(transport, "sendMail", (options, callback) => callback(null, "send-mail-info"));
+  const sendMailStub = sinon.stub(transport, 'sendMail', (options, callback) => callback(null, 'send-mail-info'));
   nodemailer.createTransport = sinon.stub().returns(transport);
 
   return sendMailStub;

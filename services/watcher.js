@@ -1,36 +1,38 @@
-"use strict";
+'use strict';
 
 module.exports = {
-  create
+  create,
 };
 
-const itemMonitorFactory = require("./itemMonitor.js"),
-  leboncoinFactory = require("./leboncoin.js");
+const itemMonitorFactory = require('./itemMonitor.js');
+const leboncoinFactory = require('./leboncoin.js');
 
 function create() {
-  const that = {},
-    leboncoinService = leboncoinFactory.create();
+  const that = {};
+  const leboncoinService = leboncoinFactory.create();
 
   that.watch = watch;
 
   return that;
 
-  ////////////////////////////////////////////////////////////
+  //----------------------------------------------------------
 
   function watch(parameters) {
-    const itemMonitorService = itemMonitorFactory.create(),
-      callback = parameters.callback,
-      delay = (parameters.delay || 60) * 60 * 1000,
-      url = parameters.url;
+    const itemMonitorService = itemMonitorFactory.create();
+    const callback = parameters.callback;
+    const delay = (parameters.delay || 60) * 60 * 1000;
+    const url = parameters.url;
 
     return leboncoinService.getItems(url)
       .then(itemMonitorService.markItemsAsSeen)
-      .then(function () {
-        setInterval(function () {
-          leboncoinService.getItems(url)
-            .then(itemMonitorService.detectUnseenItems)
-            .then(callback);
-        }, delay);
+      .then(() => {
+        setInterval(executeCallbackIfNewItems, delay);
       });
+
+    function executeCallbackIfNewItems() {
+      leboncoinService.getItems(url)
+        .then(itemMonitorService.detectUnseenItems)
+        .then(callback);
+    }
   }
 }

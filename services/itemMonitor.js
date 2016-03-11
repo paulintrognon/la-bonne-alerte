@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
 module.exports = {
-  create
+  create,
 };
 
-var _ = require("lodash");
+const _ = require('lodash');
 
 function create() {
-  var that = {},
-    seenItemsIndex = {};
+  const that = {};
+  const seenItemsIndex = {};
 
   that.detectUnseenItems = detectUnseenItems;
   that.getSeenItems = getSeenItems;
@@ -16,10 +16,10 @@ function create() {
 
   return that;
 
-  ////////////////////////////////////////////////////////////
+  //----------------------------------------------------------
 
   function detectUnseenItems(items) {
-    var newItems = items.filter(isItemUnseed);
+    const newItems = items.filter(isItemUnseed);
     newItems.forEach(markItemAsSeen);
     return newItems;
   }
@@ -32,7 +32,7 @@ function create() {
     items.forEach(markItemAsSeen);
   }
 
-  ////////////////////////////////////////////////////////////
+  //----------------------------------------------------------
 
   function isItemUnseed(item) {
     return !Boolean(seenItemsIndex[item.id]);
