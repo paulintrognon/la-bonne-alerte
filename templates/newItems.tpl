@@ -49,41 +49,25 @@
 <p>Une nouvelle annonce est parue !</p>
 
 <div class="lbc-items">
+  {{#each items}}
   <div class="lbc-item">
     <div class="lbc-picture">
       <img
         alt="test"
-        src="http://img7.leboncoin.fr/thumbs/121/121e1ccde89e15d4b85ba0f72e619117695f3d55.jpg"
+        src="{{imageUrl}}"
         />
     </div>
     <div class="lbc-description">
-      <h2>Objet 1</h2>
-      <p>Lyon 4</p>
-      <p>100 €</p>
+      <h2>{{name}}</h2>
+      <p>{{location}}</p>
+      <p>{{price}}</p>
       <p>
-        <a href="http://www.leboncoin.fr/electromenager/939463204.htm?ca=22_s">http://www.leboncoin.fr/electromenager/939463204.htm?ca=22_s</a>
+        <a href="{{href}}">{{href}}</a>
       </p>
       <aside class="lbc-date">date</aside>
     </div>
   </div>
-
-  <div class="lbc-item">
-    <div class="lbc-picture">
-      <img
-        alt="test"
-        src="http://img7.leboncoin.fr/thumbs/121/121e1ccde89e15d4b85ba0f72e619117695f3d55.jpg"
-        />
-    </div>
-    <div class="lbc-description">
-      <h2>Objet 1</h2>
-      <p>Lyon 4</p>
-      <p>100 €</p>
-      <p>
-        <a href="http://www.leboncoin.fr/electromenager/939463204.htm?ca=22_s">http://www.leboncoin.fr/electromenager/939463204.htm?ca=22_s</a>
-      </p>
-      <aside class="lbc-date">date</aside>
-    </div>
-  </div>
+  {{/each}}
 </div>
 
 </body>
