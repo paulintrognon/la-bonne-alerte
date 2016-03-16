@@ -60,6 +60,9 @@
       <h2>Objet 1</h2>
       <p>Lyon 4</p>
       <p>100 €</p>
+      <p>
+        <a href="http://www.leboncoin.fr/electromenager/939463204.htm?ca=22_s">http://www.leboncoin.fr/electromenager/939463204.htm?ca=22_s</a>
+      </p>
       <aside class="lbc-date">date</aside>
     </div>
   </div>
@@ -75,6 +78,9 @@
       <h2>Objet 1</h2>
       <p>Lyon 4</p>
       <p>100 €</p>
+      <p>
+        <a href="http://www.leboncoin.fr/electromenager/939463204.htm?ca=22_s">http://www.leboncoin.fr/electromenager/939463204.htm?ca=22_s</a>
+      </p>
       <aside class="lbc-date">date</aside>
     </div>
   </div>
