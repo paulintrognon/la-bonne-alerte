@@ -63,14 +63,14 @@ function extractIdFromUrl(url) {
 function getItemsInPage() {
   /* globals $ */
   var elements = [];
-  $('.list-lbc').children('a').each(function () {
-    var $element = $(this);
+  $('.tabsContent').children('li').each(function () {
+    var $element = $('a', this).first();
     var element = {
       name: $element.prop('title'),
       href: $element.prop('href'),
-      location: $('.placement', $element).first().text().replace(/[ \n\t]+/g, ' ').trim(),
-      price: $('.price', $element).first().text().replace(/[ \n\t]+/g, ' ').trim(),
-      imageUrl: $('.lbc .image .image-and-nb img', $element).prop('src')
+      location: $('.item_supp', $element).eq(1).text().replace(/[ \n\t]+/g, ' ').trim(),
+      price: $('.item_price', $element).first().text().replace(/[ \n\t]+/g, ' ').trim(),
+      imageUrl: $('.item_imagePic span img', $element).prop('src')
     };
 
     elements.push(element);
