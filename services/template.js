@@ -7,7 +7,7 @@ module.exports = {
 const BPromise = require('bluebird');
 const fs = BPromise.promisifyAll(require('fs'));
 const handlebars = require('handlebars');
-const templatesDir = `${__dirname} '/../templates`;
+const templatesDir = `${__dirname}/../templates`;
 
 function create() {
   const that = {};
