@@ -27,6 +27,7 @@
   .lbc-picture {
     height: 120px;
     float: left;
+    min-width: 160px;
   }
   .lbc-description {
     height: 120px;
