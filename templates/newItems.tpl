@@ -56,7 +56,7 @@
     <div class="lbc-picture">
       {{#if imageUrl}}
       <img
-        alt="test"
+        alt="{{name}}"
         src="{{imageUrl}}"
         />
       {{/if}}
