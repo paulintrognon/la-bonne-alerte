@@ -46,16 +46,20 @@
 
 <h1>La Bonne Alerte</h1>
 
-<p>Une nouvelle annonce est parue !</p>
+<p>
+  Voici les nouvelles annonces parues sur leboncoin.
+</p>
 
 <div class="lbc-items">
   {{#each items}}
   <div class="lbc-item">
     <div class="lbc-picture">
+      {{#if imageUrl}}
       <img
         alt="test"
         src="{{imageUrl}}"
         />
+      {{/if}}
     </div>
     <div class="lbc-description">
       <h2>{{name}}</h2>
