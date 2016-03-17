@@ -69,7 +69,7 @@
       <p>
         <a href="{{href}}">{{href}}</a>
       </p>
-      <aside class="lbc-date">date</aside>
+      <aside class="lbc-date">{{date}}</aside>
     </div>
   </div>
   {{/each}}
