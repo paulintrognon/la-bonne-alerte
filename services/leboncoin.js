@@ -66,6 +66,7 @@ function getItemsInPage() {
   $('.tabsContent').children('li').each(function () {
     var $element = $('a', this).first();
     var element = {
+      date: $('aside.item_absolute .item_supp', $element).first().text().replace(/[ \n\t]+/g, ' ').trim(),
       name: $element.prop('title'),
       href: $element.prop('href'),
       location: $('.item_supp', $element).eq(1).text().replace(/[ \n\t]+/g, ' ').trim(),
