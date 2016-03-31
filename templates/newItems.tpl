@@ -1,46 +1,7 @@
 <!doctype html>
 
-<html lang="fr">
 <head>
   <meta charset="utf-8">
-
-  <style type="text/css">
-  h1, h2, h3, p, div {
-    margin: 0;
-    padding: 0;
-  }
-  h1, p {
-    margin-bottom: 10px;
-  }
-  .lbc-items {
-    border-top: 1px solid #AAAAAA;
-    border-left: 1px solid #AAAAAA;
-    border-right: 1px solid #AAAAAA;
-  }
-
-  .lbc-item {
-    position: relative;
-    height: 120px;
-    padding: 10px;
-    border-bottom: 1px solid #AAAAAA;
-  }
-  .lbc-picture {
-    height: 120px;
-    float: left;
-    min-width: 160px;
-  }
-  .lbc-description {
-    height: 120px;
-    float: left;
-    padding-left: 10px;
-  }
-
-  .lbc-date {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
-  </style>
 </head>
 
 <body>
@@ -51,29 +12,28 @@
   Voici les nouvelles annonces parues sur leboncoin.
 </p>
 
-<div class="lbc-items">
+<table style="border-collapse: collapse;border-top: 1px solid #AAAAAA;">
   {{#each items}}
-  <div class="lbc-item">
-    <div class="lbc-picture">
+  <tr>
+    <td style="height: 120px;min-width: 160px;border-bottom: 1px solid #AAAAAA;border-left: 1px solid #AAAAAA;">
       {{#if imageUrl}}
       <img
         alt="{{name}}"
         src="{{imageUrl}}"
         />
       {{/if}}
-    </div>
-    <div class="lbc-description">
+    </td>
+    <td style="height: 120px;padding-left: 10px;border-bottom: 1px solid #AAAAAA;border-right: 1px solid #AAAAAA;">
       <h2>{{name}}</h2>
       <p>{{location}}</p>
-      <p>{{price}}</p>
+      <p>{{price}} - {{date}}</p>
       <p>
         <a href="{{href}}">{{href}}</a>
       </p>
-      <aside class="lbc-date">{{date}}</aside>
-    </div>
-  </div>
+    </td>
+  </tr>
   {{/each}}
-</div>
+</table>
 
 </body>
 </html>
