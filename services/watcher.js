@@ -32,7 +32,11 @@ function create() {
     function executeCallbackIfNewItems() {
       leboncoinService.getItems(url)
         .then(itemMonitorService.detectUnseenItems)
-        .then(callback);
+        .then(newItems => {
+          if (newItems.length > 0) {
+            callback(newItems);
+          }
+        });
     }
   }
 }

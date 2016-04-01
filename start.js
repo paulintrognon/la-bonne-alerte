@@ -1,154 +1,36 @@
 'use strict';
 
+const config = require('./config/config.json');
+const watcher = require('./services/watcher.js').create();
 const template = require('./services/template.js').create();
-const renderHtml = template.render('newItems.tpl', {
-  items: [
-  { href: 'http://www.leboncoin.fr/electromenager/938747914.htm?ca=22_s',
-    imageUrl: 'http://img7.leboncoin.fr/thumbs/07f/07f0db4520265d1ab35aedb2dd75b77dda702d6e.jpg',
-    location: 'Lyon 3ème / Rhône',
-    name: 'four électrique vitrocéramique',
-    price: '200 €',
-    id: '9df8924058cb2bcefa604ecacce92eca' },
-  { href: 'http://www.leboncoin.fr/electromenager/938637295.htm?ca=22_s',
-    imageUrl: 'http://img5.leboncoin.fr/thumbs/485/485f7f9e4efe573d4434f28fd980c74abc65b6e2.jpg',
-    location: 'Lyon 7ème / Rhône',
-    name: 'Cuisiniere double four neuf garantie',
-    price: '300 €',
-    id: '592e5c6e7c9971e3ced9de995ce22795' },
-  { href: 'http://www.leboncoin.fr/electromenager/931993364.htm?ca=22_s',
-    imageUrl: 'http://img0.leboncoin.fr/thumbs/0a4/0a412c5a99938b8d1bda04ee94670bf74794367a.jpg',
-    location: 'Lyon 5ème / Rhône',
-    name: 'Gazinière mixte bruleurs gaz / four electrique',
-    price: '250 €',
-    id: 'e1d3aef77ac3fb7efce7e2d5bf9b1c84' },
-  { href: 'http://www.leboncoin.fr/electromenager/938331540.htm?ca=22_s',
-    imageUrl: 'http://img4.leboncoin.fr/thumbs/2f3/2f3f6715d3b62722b45ad17ed1074738a27a9202.jpg',
-    location: 'Lyon 7ème / Rhône',
-    name: 'Cuisinière électrique four plaques vitrocéramiques',
-    price: '150 €',
-    id: 'c52d9c0de2137132d5794c905d7616f4' },
-  { href: 'http://www.leboncoin.fr/electromenager/938291432.htm?ca=22_s',
-    imageUrl: 'http://img0.leboncoin.fr/thumbs/a42/a42ff3aeac242308ffe32710559630e5e5c46ddb.jpg',
-    location: 'Lyon 3ème / Rhône',
-    name: 'Four + cuisiniere',
-    price: '250 €',
-    id: 'ff478f5e0a939956bd24c197e83216c8' },
-  { href: 'http://www.leboncoin.fr/electromenager/938287617.htm?ca=22_s',
-    imageUrl: 'http://img0.leboncoin.fr/thumbs/2e8/2e8fcfe3e7d79ce2417f89732fbbfc5ba10b86e0.jpg',
-    location: 'Lyon 8ème / Rhône',
-    name: 'Four double multifonction pyrolyse et micro ondes',
-    price: '110 €',
-    id: '4c2eed4ba0eece5bec3b7c11fd7d4a26' },
-  { href: 'http://www.leboncoin.fr/electromenager/938208726.htm?ca=22_s',
-    imageUrl: 'http://img4.leboncoin.fr/thumbs/3a1/3a187bc573dd528c44e22d1f9213bad641eb5f77.jpg',
-    location: 'Lyon 2ème / Rhône',
-    name: 'Gazinière - four De Dietrich',
-    price: '550 €',
-    id: '4422db852f1c27db3d61a4229f54c2a0' },
-  { href: 'http://www.leboncoin.fr/electromenager/938194326.htm?ca=22_s',
-    imageUrl: 'http://img4.leboncoin.fr/thumbs/a7e/a7edd937d346c082c19ab35b7a85cd5a81c9d389.jpg',
-    location: 'Lyon 9ème / Rhône',
-    name: 'Ensemble Four et four micro ondes HOTPOINT ',
-    price: '350 €',
-    id: 'efd4ec902bf077fa958d539e2fb40e9b' },
-  { href: 'http://www.leboncoin.fr/electromenager/938188245.htm?ca=22_s',
-    imageUrl: 'http://img1.leboncoin.fr/thumbs/a7c/a7c2e3f1c0dd560aea3ddad5425e53ed070d934c.jpg',
-    location: 'Lyon 9ème / Rhône',
-    name: 'Four Micron ondes Miel M8201',
-    price: '290 €',
-    id: 'd0f02e255161e4bd5a0fbb2253247f71' },
-  { href: 'http://www.leboncoin.fr/electromenager/938055259.htm?ca=22_s',
-    imageUrl: 'http://img3.leboncoin.fr/thumbs/e57/e5704143bdaa9ec7961d46761262e6e95a9d56ed.jpg',
-    location: 'Lyon 7ème / Rhône',
-    name: 'Cuisinière Scholtes INOX Four PYROLYSE',
-    price: '270 €',
-    id: '72cb1dccbd27d401b786b91ed531af60' },
-  { href: 'http://www.leboncoin.fr/electromenager/937767940.htm?ca=22_s',
-    imageUrl: 'http://img5.leboncoin.fr/thumbs/662/662490c2ab8ba67509a5341d5ab333bcdbdbc410.jpg',
-    location: 'Lyon 7ème / Rhône',
-    name: 'Four+plaque induction Whirlpool+Cuisine équipée',
-    price: '400 €',
-    id: 'a1e037043f2a5aab5f2d0ce5a6ea864d' },
-  { href: 'http://www.leboncoin.fr/electromenager/937919679.htm?ca=22_s',
-    imageUrl: 'http://img4.leboncoin.fr/thumbs/bfa/bfacbbb07d24d3cfa09ba3617b657c6f75b59d5a.jpg',
-    location: 'Lyon 3ème / Rhône',
-    name: 'Cuisinière INDESIT K3M51 avec four multifonction',
-    price: '150 €',
-    id: '3e82ee96715dd693004aa6a99c93c17f' },
-  { href: 'http://www.leboncoin.fr/electromenager/937847411.htm?ca=22_s',
-    imageUrl: 'http://img7.leboncoin.fr/thumbs/9ce/9cee527eedf5320d4ea04c4bb34cee904cc55d64.jpg',
-    location: 'Lyon 5ème / Rhône',
-    name: 'Cuisiniere 4 gaz four thermo 65l',
-    price: '150 €',
-    id: '01df6aded7100461ce8c41b7b907f23b' },
-  { href: 'http://www.leboncoin.fr/electromenager/937802583.htm?ca=22_s',
-    imageUrl: 'http://img1.leboncoin.fr/thumbs/181/1817b49b72476e12f3cce59abc664b925ffc3a94.jpg',
-    location: 'Lyon 2ème / Rhône',
-    name: 'Four ou/et frigo WHIRLPOOL, très bon état',
-    price: '350 €',
-    id: 'b6d9e918b281fbe233e39140ac775e44' },
-  { href: 'http://www.leboncoin.fr/electromenager/937802315.htm?ca=22_s',
-    imageUrl: 'http://img6.leboncoin.fr/thumbs/a8f/a8f2b309c0d53a1b8f1903456361b5e5d4b24ad4.jpg',
-    location: 'Lyon 1er / Rhône',
-    name: 'Machine à laver + Cuisinière four',
-    price: '200 €',
-    id: 'fd304907035a7b34faaff089e2f22c08' },
-  { href: 'http://www.leboncoin.fr/electromenager/937634541.htm?ca=22_s',
-    imageUrl: 'http://img1.leboncoin.fr/thumbs/a5d/a5dfc0f4f99584e1c769eed0496a419ec6ad674a.jpg',
-    location: 'Lyon 1er / Rhône',
-    name: 'FOUR PYROLYSE INOX encastrable SAUTER',
-    price: '200 €',
-    id: '6b8673989ce697f28eb4427ab1e80350' },
-  { href: 'http://www.leboncoin.fr/electromenager/937175766.htm?ca=22_s',
-    imageUrl: 'http://img4.leboncoin.fr/thumbs/a88/a88bde080207633fe0f3f12b5df0f2ac8f398e0b.jpg',
-    location: 'Lyon 5ème / Rhône',
-    name: 'Four encastrable inox pyrolyse Neuf garantie',
-    price: '330 €',
-    id: '560ad42efff7d1b9698f879d53f6e788' },
-  { href: 'http://www.leboncoin.fr/electromenager/937083043.htm?ca=22_s',
-    imageUrl: 'http://img7.leboncoin.fr/thumbs/121/121e1ccde89e15d4b85ba0f72e619117695f3d55.jpg',
-    location: 'Lyon 4ème / Rhône',
-    name: 'Cuisinière au gaz - plaque feux et four - Brandt',
-    price: '100 €',
-    id: '611612a968a092e24f7eedf94fcf0f0b' },
-  { href: 'http://www.leboncoin.fr/electromenager/936938097.htm?ca=22_s',
-    imageUrl: 'http://img2.leboncoin.fr/thumbs/256/256c1f0da8cdddb0bf70226178a48ae9023e441d.jpg',
-    location: 'Lyon 2ème / Rhône',
-    name: 'Cuisinière vitroceramique avec four',
-    price: '150 €',
-    id: 'a92f876dfe973545b927bff6f04e1085' },
-  { href: 'http://www.leboncoin.fr/electromenager/936781932.htm?ca=22_s',
-    imageUrl: 'http://img5.leboncoin.fr/thumbs/3af/3af2c7db41f1d338998314cc99ebf01caeeb71b0.jpg',
-    location: 'Lyon 6ème / Rhône',
-    name: 'Four encastrable',
-    price: '140 €',
-    id: '41fa480fa4d56fc430c2f5f5464d81ce' },
-  { href: 'http://www.leboncoin.fr/electromenager/936140739.htm?ca=22_s',
-    imageUrl: 'http://img3.leboncoin.fr/thumbs/d57/d5717767eaad6b8281debe18efbd32ddb67c9b7c.jpg',
-    location: 'Lyon 3ème / Rhône',
-    name: 'Four acier inoxydable',
-    price: '180 €',
-    id: '9f7734933e6402744947e10a702cfcb2' },
-  { href: 'http://www.leboncoin.fr/electromenager/936115156.htm?ca=22_s',
-    location: 'Lyon 8ème / Rhône',
-    name: 'Cuisinière Gaz+four électrique pyrolyse',
-    price: '150 €',
-    id: '0be197d49bdee4cfcd7bcfd6ac8c3250' },
-  { href: 'http://www.leboncoin.fr/electromenager/936114844.htm?ca=22_s',
-    location: 'Lyon 3ème / Rhône',
-    name: 'Four micro-onde SHARP',
-    price: '120 €',
-    id: '7797720f56a306ac3120a4a4155fefbe' }
-  ]
+const mailer = require('./services/mailer.js').create({ sender: config.email.from, auth: config.email.auth });
+
+console.log('Starting!');
+watcher.watch({
+  url: 'http://www.leboncoin.fr/colocations/offres/rhone_alpes/?th=1&location=Lyon%2069007%2CLyon%2069003%2CLyon%2069002',
+  callback: sendmail,
 });
 
-const http = require('http');
-const server = http.createServer((request, response) => {
-  response.writeHead(200, { 'Content-Type': 'text/html' });
-  renderHtml.then((html) => {
-    response.write(html);
-    response.end();
-  });
-});
-
-server.listen(8080);
+function sendmail(items) {
+  template.render('newItems.tpl', { items })
+    .then((html) => {
+      console.log(`sending a mail! (${items.length} new items)`);
+      mailer.mail({
+        html,
+        recipients: 'paulin.trognon@gmail.com',
+        subject: 'Nouvelles annonces leboncoin :)',
+      });
+    });
+}
+/*
+require('./services/leboncoin.js').create().getItems('http://www.leboncoin.fr/electromenager/offres/rhone_alpes/?f=a&th=1&ps=8&q=four&it=1&location=Lyon')
+  .then((items) => template.render('newItems.tpl', { items }))
+  .then((html) => {
+    console.log('sending mail');
+    mailer.mail({
+      html,
+      text: 'test',
+      recipients: 'paulin.trognon@gmail.com',
+      subject: 'Nouvelles annonces leboncoin :)',
+    });
+  });*/
