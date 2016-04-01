@@ -35,6 +35,8 @@ function create() {
         .then(newItems => {
           if (newItems.length > 0) {
             callback(newItems);
+          } else {
+            console.log('No new item found.');
           }
         });
     }
