@@ -10,6 +10,7 @@
 
 <p>
   Voici les nouvelles annonces parues sur leboncoin.
+  <a href="{{searchUrl}}">Voir la recherche originale</a>
 </p>
 
 <table style="border-collapse: collapse;border-top: 1px solid #AAAAAA;">
