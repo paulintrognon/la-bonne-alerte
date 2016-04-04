@@ -1,6 +1,6 @@
 {
   "name": "la-bonne-alerte",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Automatic email alerts for leboncoin",
   "author": "paulin.trognon@gmail.com",
   "license": "MIT",
