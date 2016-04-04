@@ -6,6 +6,7 @@ module.exports = {
 
 const itemMonitorFactory = require('./itemMonitor.js');
 const leboncoinFactory = require('./leboncoin.js');
+const logger = require('./logger.js');
 
 function create() {
   const that = {};
@@ -36,7 +37,7 @@ function create() {
           if (newItems.length > 0) {
             callback(newItems);
           } else {
-            console.log('No new item found.');
+            logger.debug('No new item found.');
           }
         });
     }

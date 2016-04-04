@@ -12,12 +12,14 @@ const logger = new winston.Logger({
       maxsize: 5242880, // 5MB
       maxFiles: 5,
       colorize: false,
+      timestamp: true,
     }),
     new winston.transports.Console({
       level: 'debug',
       handleExceptions: true,
       json: false,
       colorize: true,
+      timestamp: true,
     }),
   ],
   exitOnError: false,
