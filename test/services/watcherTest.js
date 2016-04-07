@@ -2,6 +2,7 @@
 
 describe('watcher service', () => {
   it('should watch an url using leboncoinService', test);
+  it('should not watch twice', watchTwiceTest);
   it('should stop when asked', stopTest);
 });
 
@@ -42,6 +43,29 @@ function test(done) {
     service.stop();
     done();
   }, 1200);
+}
+
+function watchTwiceTest(done) {
+  const getItemsStub = sinon.stub().returns(BPromise.resolve([]));
+  const callback = sinon.stub();
+  const parameters = {
+    delay: (1 / 60 / 2),
+    callback,
+  };
+
+  const service = createService(parameters, getItemsStub);
+
+  BPromise.all([
+    service.watch(),
+    service.watch(),
+    service.watch(),
+  ])
+    .then(service.stop)
+    .then(() => {
+      should(getItemsStub.callCount).equal(1);
+      should(callback.callCount).equal(0);
+    })
+    .then(done, done);
 }
 
 function stopTest(done) {

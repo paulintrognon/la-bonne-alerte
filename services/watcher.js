@@ -26,7 +26,7 @@ function create(parameters) {
   //----------------------------------------------------------
 
   function watch() {
-    if (intervalId) {
+    if (startPromise) {
       logger.warn('Watcher is already watching.');
       return BPromise.resolve();
     }
