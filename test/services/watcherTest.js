@@ -2,6 +2,7 @@
 
 describe('watcher service', () => {
   it('should watch an url using leboncoinService', test);
+  it('should stop when asked', stopTest);
 });
 
 const BPromise = require('bluebird');
@@ -40,6 +41,27 @@ function test(done) {
     should(callback.callCount).equal(2);
     should(callback.firstCall.args[0]).eql([{ id: 2 }]);
     should(callback.secondCall.args[0]).eql([{ id: 3 }]);
+    service.stop();
+    done();
+  }, 1200);
+}
+
+function stopTest(done) {
+  const getItemsStub = sinon.stub().returns(BPromise.resolve([]));
+  const callback = sinon.stub();
+  const parameters = {
+    delay: (1 / 60 / 2),
+    callback,
+  };
+
+  const service = createService(parameters, { getItems: getItemsStub });
+
+  service.watch();
+  service.stop();
+
+  setTimeout(() => {
+    should(getItemsStub.callCount).equal(1);
+    should(callback.callCount).equal(0);
     done();
   }, 1200);
 }
