@@ -2,7 +2,7 @@
 
 const config = require('./config/config.json');
 const logger = require('./services/logger.js');
-const watcher = require('./services/watcher.js').create();
+const watcherFactory = require('./services/watcher.js');
 const template = require('./services/template.js').create();
 const mailer = require('./services/mailer.js').create({ sender: config.email.from, auth: config.email.auth });
 const argv = require('yargs')
@@ -16,10 +16,12 @@ const searchUrl = argv.url;
 const recipients = argv.recipients;
 
 logger.info('Starting!');
-watcher.watch({
+
+const watcher = watcherFactory.create({
   url: searchUrl,
   callback: sendmail,
 });
+watcher.watch();
 
 function sendmail(items) {
   template.render('newItems.tpl', { searchUrl, items })
