@@ -11,9 +11,7 @@ const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 
 function test(done) {
-  const stubs = {
-    getItems: sinon.stub(),
-  };
+  const getItemsStub = sinon.stub();
   const callback = sinon.stub();
   const parameters = {
     delay: (1 / 60 / 2),
@@ -24,20 +22,20 @@ function test(done) {
   const secondItems = [{ id: 1 }, { id: 2 }];
   const thirdItems = [{ id: 2 }, { id: 3 }];
 
-  stubs.getItems.onFirstCall().returns(BPromise.resolve(firstItems));
-  stubs.getItems.onSecondCall().returns(BPromise.resolve(secondItems));
-  stubs.getItems.onThirdCall().returns(BPromise.resolve(thirdItems));
-  stubs.getItems.returns(BPromise.resolve([]));
+  getItemsStub.onFirstCall().returns(BPromise.resolve(firstItems));
+  getItemsStub.onSecondCall().returns(BPromise.resolve(secondItems));
+  getItemsStub.onThirdCall().returns(BPromise.resolve(thirdItems));
+  getItemsStub.returns(BPromise.resolve([]));
 
-  const service = createService(parameters, stubs);
+  const service = createService(parameters, getItemsStub);
 
   service.watch();
 
   setTimeout(() => {
-    should(stubs.getItems.callCount).equal(3);
-    should(stubs.getItems.firstCall.args[0]).equal(parameters.url);
-    should(stubs.getItems.secondCall.args[0]).equal(parameters.url);
-    should(stubs.getItems.thirdCall.args[0]).equal(parameters.url);
+    should(getItemsStub.callCount).equal(3);
+    should(getItemsStub.firstCall.args[0]).equal(parameters.url);
+    should(getItemsStub.secondCall.args[0]).equal(parameters.url);
+    should(getItemsStub.thirdCall.args[0]).equal(parameters.url);
     should(callback.callCount).equal(2);
     should(callback.firstCall.args[0]).eql([{ id: 2 }]);
     should(callback.secondCall.args[0]).eql([{ id: 3 }]);
@@ -54,7 +52,7 @@ function stopTest(done) {
     callback,
   };
 
-  const service = createService(parameters, { getItems: getItemsStub });
+  const service = createService(parameters, getItemsStub);
 
   service.watch();
   service.stop();
@@ -66,9 +64,9 @@ function stopTest(done) {
   }, 1200);
 }
 
-function createService(parameters, stubs) {
+function createService(parameters, getItemsStub) {
   const fakeLeboncoin = {
-    getItems: stubs.getItems,
+    getItems: getItemsStub,
   };
   const serviceFactory = proxyquire('../../services/watcher.js', {
     './leboncoin.js': { create: () => fakeLeboncoin },
