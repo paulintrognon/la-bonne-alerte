@@ -21,7 +21,7 @@ const watcher = watcherFactory.create({
   url: searchUrl,
   callback: sendmail,
 });
-watcher.watch();
+watcher.start();
 
 function sendmail(items) {
   template.render('newItems.tpl', { searchUrl, items })

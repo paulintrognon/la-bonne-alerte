@@ -18,14 +18,14 @@ function create(parameters) {
   let startPromise;
   let intervalId;
 
-  that.watch = watch;
+  that.start = start;
   that.stop = stop;
 
   return that;
 
   //----------------------------------------------------------
 
-  function watch() {
+  function start() {
     if (startPromise) {
       logger.warn('Watcher is already watching.');
       return BPromise.resolve();

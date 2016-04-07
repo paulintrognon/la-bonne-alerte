@@ -1,8 +1,8 @@
 'use strict';
 
 describe('watcher service', () => {
-  it('should watch an url using leboncoinService', test);
-  it('should not watch twice', watchTwiceTest);
+  it('should watch an url using leboncoinService', startTest);
+  it('should not watch twice', startTwiceTest);
   it('should stop when asked', stopTest);
 });
 
@@ -11,7 +11,7 @@ const should = require('should/as-function');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 
-function test(done) {
+function startTest(done) {
   const getItemsStub = sinon.stub();
   const callback = sinon.stub();
   const parameters = {
@@ -30,7 +30,7 @@ function test(done) {
 
   const service = createService(parameters, getItemsStub);
 
-  service.watch();
+  service.start();
 
   setTimeout(() => {
     should(getItemsStub.callCount).equal(3);
@@ -45,7 +45,7 @@ function test(done) {
   }, 1200);
 }
 
-function watchTwiceTest(done) {
+function startTwiceTest(done) {
   const getItemsStub = sinon.stub().returns(BPromise.resolve([]));
   const callback = sinon.stub();
   const parameters = {
@@ -56,9 +56,9 @@ function watchTwiceTest(done) {
   const service = createService(parameters, getItemsStub);
 
   BPromise.all([
-    service.watch(),
-    service.watch(),
-    service.watch(),
+    service.start(),
+    service.start(),
+    service.start(),
   ])
     .then(service.stop)
     .then(() => {
@@ -78,7 +78,7 @@ function stopTest(done) {
 
   const service = createService(parameters, getItemsStub);
 
-  service.watch();
+  service.start();
   service.stop();
 
   setTimeout(() => {
