@@ -4,6 +4,7 @@ describe('watcher service', () => {
   it('should watch an url using leboncoinService', startTest);
   it('should not watch twice', startTwiceTest);
   it('should stop when asked', stopTest);
+  it('should warn if trying to stop a non-started watcher', stopNonStartedTest);
 });
 
 const BPromise = require('bluebird');
@@ -29,7 +30,7 @@ function startTest(done) {
   getItemsStub.onThirdCall().returns(BPromise.resolve(thirdItems));
   getItemsStub.returns(BPromise.resolve([]));
 
-  const service = createService(parameters, getItemsStub);
+  const service = createService({ parameters, getItemsStub });
 
   service.start();
 
@@ -55,7 +56,7 @@ function startTwiceTest(done) {
     callback,
   };
 
-  const service = createService(parameters, getItemsStub, logger);
+  const service = createService({ parameters, getItemsStub, logger });
 
   BPromise.all([
     service.start(),
@@ -81,7 +82,7 @@ function stopTest(done) {
     callback,
   };
 
-  const service = createService(parameters, getItemsStub);
+  const service = createService({ parameters, getItemsStub });
 
   service.start();
   service.stop();
@@ -93,13 +94,23 @@ function stopTest(done) {
   }, 1200);
 }
 
-function createService(parameters, getItemsStub, fakeLogger) {
+function stopNonStartedTest() {
+  const logger = fakeLoggerFactory.create();
+
+  const service = createService({ logger });
+  service.stop();
+
+  should(logger.warn.callCount).equal(1);
+  should(logger.warn.firstCall.args[0]).equal('Watcher is not watching.');
+}
+
+function createService(parameters) {
   const fakeLeboncoin = {
-    getItems: getItemsStub,
+    getItems: parameters.getItemsStub || sinon.stub(),
   };
   const serviceFactory = proxyquire('../../services/watcher.js', {
     './leboncoin.js': { create: () => fakeLeboncoin },
-    './logger.js': fakeLogger || fakeLoggerFactory.create(),
+    './logger.js': parameters.logger || fakeLoggerFactory.create(),
   });
-  return serviceFactory.create(parameters);
+  return serviceFactory.create(parameters.parameters || {});
 }
