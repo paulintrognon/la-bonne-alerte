@@ -1,26 +1,28 @@
-"use strict";
+'use strict';
 
-var winston = require("winston");
+const winston = require('winston');
 
-var logger = new winston.Logger({
+const logger = new winston.Logger({
   transports: [
     new winston.transports.File({
-      level: "info",
-      filename: "./log/app.log",
+      level: 'info',
+      filename: './log/app.log',
       handleExceptions: true,
       json: true,
-      maxsize: 5242880, //5MB
+      maxsize: 5242880, // 5MB
       maxFiles: 5,
-      colorize: false
+      colorize: false,
+      timestamp: true,
     }),
     new winston.transports.Console({
-      level: "debug",
+      level: 'debug',
       handleExceptions: true,
       json: false,
-      colorize: true
-    })
+      colorize: true,
+      timestamp: true,
+    }),
   ],
-  exitOnError: false
+  exitOnError: false,
 });
 
 module.exports = logger;

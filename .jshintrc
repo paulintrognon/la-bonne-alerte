@@ -1,10 +1,11 @@
 {
   "indent": 2,
-  "latedef": true,
-  "quotmark": "double",
+  "latedef": "nofunc",
+  "quotmark": "single",
   "maxparams": 4,
   "maxdepth": 5,
   "maxlen": 120,
 
-  "node": true
+  "node": true,
+  "esversion": 6
 }

@@ -1,17 +1,11 @@
-rules:
-  indent:
-    - 2
-    - 2
-  quotes:
-    - 2
-    - double
-  linebreak-style:
-    - 2
-    - unix
-  semi:
-    - 2
-    - always
-env:
-  es6: true
-  node: true
-extends: 'eslint:recommended'
+{
+  "extends": "airbnb/base",
+  "rules": {
+    'max-len': [2, 120, 2, {
+      'ignoreUrls': true,
+      'ignoreComments': false
+    }],
+    "no-param-reassign": [2, {"props": false}],
+    "no-use-before-define": [2, "nofunc"]
+  }
+}

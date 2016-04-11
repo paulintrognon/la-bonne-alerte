@@ -1,3 +1,5 @@
-!*/.gitkeep
-log/*
-node_modules
+!/*/.gitkeep
+/log/*
+/node_modules
+/config/config.json
+/npm-debug.log
