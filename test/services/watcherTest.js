@@ -7,6 +7,7 @@ describe('watcher service', () => {
 });
 
 const BPromise = require('bluebird');
+const fakeLoggerFactory = require('../fakeLogger.js');
 const should = require('should/as-function');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
@@ -46,6 +47,7 @@ function startTest(done) {
 }
 
 function startTwiceTest(done) {
+  const logger = fakeLoggerFactory.create();
   const getItemsStub = sinon.stub().returns(BPromise.resolve([]));
   const callback = sinon.stub();
   const parameters = {
@@ -53,7 +55,7 @@ function startTwiceTest(done) {
     callback,
   };
 
-  const service = createService(parameters, getItemsStub);
+  const service = createService(parameters, getItemsStub, logger);
 
   BPromise.all([
     service.start(),
@@ -64,6 +66,9 @@ function startTwiceTest(done) {
     .then(() => {
       should(getItemsStub.callCount).equal(1);
       should(callback.callCount).equal(0);
+      should(logger.warn.callCount).equal(2);
+      should(logger.warn.firstCall.args[0]).equal('Watcher is already watching.');
+      should(logger.warn.secondCall.args[0]).equal('Watcher is already watching.');
     })
     .then(done, done);
 }
@@ -88,12 +93,13 @@ function stopTest(done) {
   }, 1200);
 }
 
-function createService(parameters, getItemsStub) {
+function createService(parameters, getItemsStub, fakeLogger) {
   const fakeLeboncoin = {
     getItems: getItemsStub,
   };
   const serviceFactory = proxyquire('../../services/watcher.js', {
     './leboncoin.js': { create: () => fakeLeboncoin },
+    './logger.js': fakeLogger || fakeLoggerFactory.create(),
   });
   return serviceFactory.create(parameters);
 }
