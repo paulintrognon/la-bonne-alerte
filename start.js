@@ -15,13 +15,23 @@ const argv = require('yargs')
 const searchUrl = argv.url;
 const recipients = argv.recipients;
 
-logger.info('Starting!');
-
 const watcher = watcherFactory.create({
   url: searchUrl,
   callback: sendmail,
 });
-watcher.start();
+watcher.start()
+  .then(() => {
+    logger.info('Application has started.');
+    process.on('SIGINT', stop);
+    process.on('SIGTERM', stop);
+  });
+
+function stop() {
+  watcher.stop()
+    .then(() => {
+      logger.info('Application has stopped.');
+    });
+}
 
 function sendmail(items) {
   template.render('newItems.tpl', { searchUrl, items })
