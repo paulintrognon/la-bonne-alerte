@@ -5,6 +5,7 @@ module.exports = {
 };
 
 const BPromise = require('bluebird');
+const schedule = require('node-schedule');
 const itemMonitorFactory = require('./itemMonitor.js');
 const leboncoinService = require('./leboncoin.js').create();
 const logger = require('./logger.js');
@@ -13,10 +14,10 @@ function create(parameters) {
   const that = {};
   const itemMonitorService = itemMonitorFactory.create();
   const callback = parameters.callback;
-  const delay = (parameters.delay || 60) * 60 * 1000;
+  const rule = parameters.rule || { minute: 0 };
   const url = parameters.url;
   let startPromise;
-  let intervalId;
+  let job;
 
   that.start = start;
   that.stop = stop;
@@ -34,13 +35,13 @@ function create(parameters) {
     startPromise = leboncoinService.getItems(url)
       .then(itemMonitorService.markItemsAsSeen)
       .then(() => {
-        intervalId = setInterval(checkIfNewItems, delay);
+        job = schedule.scheduleJob(rule, checkIfNewItems);
       });
     return startPromise;
   }
 
   function checkIfNewItems() {
-    leboncoinService.getItems(url)
+    return leboncoinService.getItems(url)
       .then(itemMonitorService.detectUnseenItems)
       .then(newItems => {
         logger.debug(`Looking for new items at ${url}...`);
@@ -59,7 +60,7 @@ function create(parameters) {
     }
     return startPromise.then(() => {
       logger.info(`Stopping watcher for url ${url}.`);
-      clearInterval(intervalId);
+      job.cancel();
     });
   }
 }
