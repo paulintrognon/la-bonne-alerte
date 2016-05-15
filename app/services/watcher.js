@@ -7,7 +7,7 @@ module.exports = {
 const BPromise = require('bluebird');
 const schedule = require('node-schedule');
 const itemMonitorFactory = require('./itemMonitor.js');
-const leboncoinService = require('./leboncoin.js').create();
+const leboncoinService = require('./leboncoin.js');
 const logger = require('./logger.js');
 
 function create(parameters) {

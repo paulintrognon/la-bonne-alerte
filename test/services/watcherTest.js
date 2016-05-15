@@ -8,6 +8,7 @@ describe('watcher service', () => {
 });
 
 const BPromise = require('bluebird');
+const path = '../../app/services/watcher.js';
 const fakeLoggerFactory = require('../fakeLogger.js');
 const should = require('should/as-function');
 const sinon = require('sinon');
@@ -117,9 +118,9 @@ function createService(parameters) {
   const fakeLeboncoin = {
     getItems: parameters.getItemsStub || sinon.stub(),
   };
-  const serviceFactory = proxyquire('../../services/watcher.js', {
+  const serviceFactory = proxyquire(path, {
     'node-schedule': createFakeSchedule(parameters.scheduleJobStub),
-    './leboncoin.js': { create: () => fakeLeboncoin },
+    './leboncoin.js': fakeLeboncoin,
     './logger.js': parameters.logger || fakeLoggerFactory.create(),
   });
   return serviceFactory.create(parameters.parameters || {});

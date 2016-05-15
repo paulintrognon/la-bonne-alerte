@@ -10,7 +10,7 @@ const should = require('should/as-function');
 const sinon = require('sinon');
 const nodemailer = {};
 const mailgunConfigStub = sinon.stub();
-const serviceFactory = proxyquire('../../services/mailer.js', {
+const serviceFactory = proxyquire('../../app/services/mailer.js', {
   nodemailer,
   'nodemailer-mailgun-transport': mailgunConfigStub,
 });
