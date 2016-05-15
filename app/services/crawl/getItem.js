@@ -14,12 +14,13 @@ function getItem(url) {
 function getItemInPage() {
   var values = $('.properties .line .value');
   var item = {};
-  [
-    {index: 3, name: 'nbRooms'},
-    {index: 4, name: 'furnished'},
-    {index: 5, name: 'surfaceArea'}
-  ].forEach(function (value) {
-    item[value.name] = values.eq(value.index).text().trim();
+
+  $('.properties .line>h2').each(function (element) {
+    var property = $('.property', this).first().text().trim();
+    var value = $('.value', this).first().text().trim();
+    if (property) {
+      item[property] = value;
+    }
   });
 
   var images = [];
