@@ -1,8 +1,6 @@
 'use strict';
 
-module.exports = {
-  create,
-};
+module.exports = create();
 
 const getItemsFromLbc = require('./getItems.js');
 const hash = require('./hash.js');
