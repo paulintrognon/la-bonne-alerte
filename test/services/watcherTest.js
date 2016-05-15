@@ -119,7 +119,7 @@ function createService(parameters) {
   };
   const serviceFactory = proxyquire('../../services/watcher.js', {
     'node-schedule': createFakeSchedule(parameters.scheduleJobStub),
-    './leboncoin.js': { create: () => fakeLeboncoin },
+    './leboncoin.js': fakeLeboncoin,
     './logger.js': parameters.logger || fakeLoggerFactory.create(),
   });
   return serviceFactory.create(parameters.parameters || {});
