@@ -44,6 +44,6 @@ function getItemsTest(done) {
 
 function createService(specs) {
   return proxyquire(path, {
-    './getItems.js': specs.getItemsStub,
+    './crawl/getItems.js': specs.getItemsStub,
   });
 }

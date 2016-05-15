@@ -2,7 +2,7 @@
 
 module.exports = getItems;
 
-const crawler = require('./crawler.js');
+const crawler = require('../crawler.js');
 
 function getItems(url) {
   return crawler.crawlWithScroll(url, getItemsInPage);

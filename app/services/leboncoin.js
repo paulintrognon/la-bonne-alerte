@@ -2,7 +2,7 @@
 
 module.exports = create();
 
-const getItemsFromLbc = require('./getItems.js');
+const getItemsFromLbc = require('./crawl/getItems.js');
 const hash = require('./hash.js');
 const urlHelper = require('url');
 
