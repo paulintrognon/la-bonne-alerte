@@ -1,6 +1,6 @@
 !/*/.gitkeep
 /log/*
 /node_modules
-/config/config.json
+/app/config/config.json
 /npm-debug.log
 /reports

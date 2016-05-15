@@ -9,7 +9,7 @@ function getItemsSuite() {
 }
 
 const BPromise = require('bluebird');
-const path = '../../services/leboncoin.js';
+const path = '../../app/services/leboncoin.js';
 const proxyquire = require('proxyquire');
 const should = require('should');
 const sinon = require('sinon');

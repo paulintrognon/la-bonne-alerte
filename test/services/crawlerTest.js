@@ -14,7 +14,7 @@ function crawlWithScrollSuite() {
   it('should scroll to 5000 px', crawlWithScrollTest);
 }
 
-const path = '../../services/crawler.js';
+const path = '../../app/services/crawler.js';
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const should = require('should');

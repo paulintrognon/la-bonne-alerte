@@ -7,7 +7,7 @@ describe('itemMonitor Service', () => {
 
 const _ = require('lodash');
 const should = require('should/as-function');
-const itemMonitorFactory = require('../../services/itemMonitor.js');
+const itemMonitorFactory = require('../../app/services/itemMonitor.js');
 
 function detectUnseenItemsSuite() {
   it('should return unseen items and mark new items as seen', unseenItemTest);

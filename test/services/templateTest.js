@@ -11,7 +11,7 @@ const sinon = require('sinon');
 
 const fs = {};
 const handlebars = {};
-const serviceFactory = proxyquire('../../services/template.js', {
+const serviceFactory = proxyquire('../../app/services/template.js', {
   fs,
   handlebars,
 });
