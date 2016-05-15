@@ -10,6 +10,7 @@ function create() {
 
   that.crawl = crawl;
   that.crawlWithScroll = crawlWithScroll;
+  that.play = play;
 
   return that;
 
@@ -26,10 +27,24 @@ function create() {
     return runInPage(pageScrolled, callback);
   }
 
+  function play(url, callback) {
+    const page = goTo(url);
+    const pageAfterPlay = callback(page);
+    if (pageAfterPlay === undefined) {
+      throw new Error('No nightmare instance found after play: you need to return the nightmare instance.');
+    }
+    return toPromise(pageAfterPlay);
+  }
+
+  // --------------------------------------------------------
+
   function runInPage(page, callback) {
+    return toPromise(page.evaluate(callback));
+  }
+
+  function toPromise(page) {
     return new BPromise((resolve, reject) => {
       page
-        .evaluate(callback)
         .run((err, result) => {
           if (err) {
             reject(err);

@@ -3,6 +3,7 @@
 describe('crawler service', () => {
   describe('.crawl', crawlSuite);
   describe('.crawlWithScroll', crawlWithScrollSuite);
+  describe('.play', playSuite);
 });
 
 function crawlSuite() {
@@ -12,6 +13,11 @@ function crawlSuite() {
 
 function crawlWithScrollSuite() {
   it('should scroll to 5000 px', crawlWithScrollTest);
+}
+
+function playSuite() {
+  it('should give nightmare instance to callback then resolve', playTest);
+  it('should throw an error if nightmare is not returned', playErrorTest);
 }
 
 const path = '../../app/services/crawler.js';
@@ -88,6 +94,38 @@ function crawlWithScrollTest(done) {
       should(res).equal(expectedResult);
     })
     .then(done, done);
+}
+
+// -----------------------------------------------------------
+
+function playTest(done) {
+  const expectedResult = [];
+  const nightmare = createFakeNightmare({ res: expectedResult });
+  const service = createService({ nightmare });
+  const url = 'super-url';
+  const spy = sinon.stub();
+  const callback = sinon.spy(page => {
+    spy(page);
+    return page;
+  });
+
+  service.play(url, callback)
+    .then(res => {
+      should(nightmare.goto.callCount).equal(1);
+      should(nightmare.goto.firstCall.args[0]).equal(url);
+      should(spy.callCount).equal(1);
+      should(spy.firstCall.args[0]).equal(nightmare);
+      should(res).equal(expectedResult);
+    })
+    .then(done, done);
+}
+
+function playErrorTest() {
+  const nightmare = createFakeNightmare({});
+  const service = createService({ nightmare });
+  should(() => {
+    service.play('url', () => {});
+  }).throw('No nightmare instance found after play: you need to return the nightmare instance.');
 }
 
 // -----------------------------------------------------------
