@@ -2,13 +2,13 @@
 
 module.exports = getItem;
 
-const crawler = require('../crawler.js');
+const crawlerFactory = require('../crawler.js');
 
 function getItem(url) {
-  return crawler.play(url, page => page.click('.button-orange')
-    .wait('.sidebar span.phone_number')
-    .evaluate(getItemInPage)
-  );
+  const crawler = crawlerFactory(url);
+
+  return crawler.clickOn('.sidebar .button-orange.phoneNumber', '.sidebar span.phone_number')
+    .then(() => crawler.execute(getItemInPage));
 }
 
 function getItemInPage() {
@@ -23,13 +23,12 @@ function getItemInPage() {
     }
   });
 
-  var images = [];
+  item.images = [];
   $('.carousel .item_imagePic').each(function (element) {
     var src = $('img', this).first().attr('src');
-    images.push('http:' + src);
+    item.images.push('http:' + src);
   });
 
-  item.images = images.slice(1);
   item.description = $('p[itemprop="description"]').eq(0).html().trim();
   item.phoneNumber = $('.sidebar span.phone_number').text().trim();
 

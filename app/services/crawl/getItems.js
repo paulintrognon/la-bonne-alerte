@@ -2,10 +2,12 @@
 
 module.exports = getItems;
 
-const crawler = require('../crawler.js');
+const crawlerFactory = require('../crawler.js');
 
 function getItems(url) {
-  return crawler.crawlWithScroll(url, getItemsInPage);
+  const crawler = crawlerFactory(url);
+  crawler.scrollToMaxHeight();
+  return crawler.execute(getItemsInPage);
 }
 
 function getItemsInPage() {

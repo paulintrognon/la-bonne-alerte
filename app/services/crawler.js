@@ -1,50 +1,39 @@
 'use strict';
 
-module.exports = create();
+module.exports = create;
 
 const BPromise = require('bluebird');
 const nightmareFactory = require('nightmare');
 
-function create() {
+function create(url) {
   const that = {};
+  let page = init();
 
-  that.crawl = crawl;
-  that.crawlWithScroll = crawlWithScroll;
-  that.play = play;
+  that.clickOn = clickOn;
+  that.execute = execute;
+  that.scrollToMaxHeight = scrollToMaxHeight;
 
   return that;
 
   // --------------------------------------------------------
 
-  function crawl(url, callback) {
-    const page = goTo(url);
-    return runInPage(page, callback);
+  function init() {
+    const nightmare = nightmareFactory();
+    return nightmare.goto(url);
   }
 
-  function crawlWithScroll(url, callback, maxHeight) {
-    const page = goTo(url);
-    const pageScrolled = scrollToMaxHeight(page, maxHeight);
-    return runInPage(pageScrolled, callback);
+  function clickOn(clickSelector, waitSelector) {
+    return page.exists(clickSelector)
+      .then(exists => {
+        if (exists) {
+          page = page.click(clickSelector).wait(waitSelector);
+        }
+      });
   }
 
-  function play(url, callback) {
-    const page = goTo(url);
-    const pageAfterPlay = callback(page);
-    if (pageAfterPlay === undefined) {
-      throw new Error('No nightmare instance found after play: you need to return the nightmare instance.');
-    }
-    return toPromise(pageAfterPlay);
-  }
-
-  // --------------------------------------------------------
-
-  function runInPage(page, callback) {
-    return toPromise(page.evaluate(callback));
-  }
-
-  function toPromise(page) {
+  function execute(callback) {
     return new BPromise((resolve, reject) => {
-      page
+      page = page.evaluate(callback)
         .run((err, result) => {
           if (err) {
             reject(err);
@@ -56,22 +45,15 @@ function create() {
     });
   }
 
-  function goTo(url) {
-    const nightmare = nightmareFactory();
-    return nightmare.goto(url);
-  }
-
-  function scrollToMaxHeight(page, _maxHeight) {
+  function scrollToMaxHeight(_maxHeight) {
     const maxHeight = _maxHeight || 5000;
-    let pageScrolled = page;
     for (let height = 0; height <= maxHeight; height += 1000) {
-      pageScrolled = scroll(pageScrolled, height);
+      page = scroll(page, height);
     }
-    return pageScrolled;
   }
 
-  function scroll(page, height) {
-    return page.evaluate(scrollInPage, height).wait(500);
+  function scroll(pageToScroll, height) {
+    return pageToScroll.evaluate(scrollInPage, height).wait(500);
   }
 
   function scrollInPage(height) {
