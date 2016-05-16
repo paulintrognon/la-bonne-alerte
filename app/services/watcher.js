@@ -45,7 +45,6 @@ function create(parameters) {
       .then(itemMonitorService.detectUnseenItems)
       .then(leboncoinService.completeItems)
       .then(newItems => {
-        console.log(newItems);
         logger.debug(`Looking for new items at ${url}...`);
         if (newItems.length > 0) {
           callback(newItems);

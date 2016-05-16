@@ -7,6 +7,7 @@ describe('watcher service', () => {
   it('should warn if trying to stop a non-started watcher', stopNonStartedTest);
 });
 
+const _ = require('lodash');
 const BPromise = require('bluebird');
 const path = '../../app/services/watcher.js';
 const fakeLoggerFactory = require('../fakeLogger.js');
@@ -37,7 +38,9 @@ function startTest(done) {
   getItemsStub.onThirdCall().returns(BPromise.resolve(thirdItems));
   getItemsStub.returns(BPromise.resolve([]));
 
-  const service = createService({ parameters, getItemsStub, scheduleJobStub });
+  const completeItemsStub = sinon.spy(items => items.map(item => _.assign({ completed: true }, item)));
+
+  const service = createService({ parameters, getItemsStub, completeItemsStub, scheduleJobStub });
 
   service.start();
 
@@ -47,13 +50,17 @@ function startTest(done) {
     should(getItemsStub.secondCall.args[0]).equal(parameters.url);
     should(getItemsStub.thirdCall.args[0]).equal(parameters.url);
     should(callback.callCount).equal(2);
-    should(callback.firstCall.args[0]).eql([{ id: 2 }]);
-    should(callback.secondCall.args[0]).eql([{ id: 3 }]);
+    should(callback.firstCall.args[0]).eql([{ id: 2, completed: true }]);
+    should(callback.secondCall.args[0]).eql([{ id: 3, completed: true }]);
+    should(completeItemsStub.callCount).equal(3);
+    should(completeItemsStub.firstCall.args[0]).eql([{ id: 2 }]);
+    should(completeItemsStub.secondCall.args[0]).eql([{ id: 3 }]);
+    should(completeItemsStub.thirdCall.args[0]).eql([]);
     should(scheduleJobStub.callCount).equal(1);
     should(scheduleJobStub.firstCall.args[0]).equal(parameters.rule);
     service.stop();
     done();
-  }, 500);
+  }, 100);
 }
 
 function startTwiceTest(done) {
@@ -117,6 +124,7 @@ function stopNonStartedTest() {
 function createService(parameters) {
   const fakeLeboncoin = {
     getItems: parameters.getItemsStub || sinon.stub(),
+    completeItems: parameters.completeItemsStub || sinon.stub(),
   };
   const serviceFactory = proxyquire(path, {
     'node-schedule': createFakeSchedule(parameters.scheduleJobStub),
