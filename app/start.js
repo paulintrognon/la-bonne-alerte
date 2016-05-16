@@ -34,7 +34,7 @@ function stop() {
 }
 
 function sendmail(items) {
-  template.render('newItems.tpl', { searchUrl, items })
+  template.render('newItems.hbs', { searchUrl, items })
     .then(html => {
       logger.info(`sending a mail! (${items.length} new items)`);
       mailer.mail({
