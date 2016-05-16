@@ -26,6 +26,6 @@
   },
   "scripts": {
     "start": "node app/start.js",
-    "test": "./node_modules/.bin/istanbul --include-all-sources cover -dir reports _mocha -- --recursive test/"
+    "test": "./node_modules/.bin/istanbul --include-all-sources cover -x \"app/services/crawl/*\" -dir reports _mocha -- --recursive test/"
   }
 }

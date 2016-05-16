@@ -2,7 +2,10 @@
 
 module.exports = create();
 
-const getItemsFromLbc = require('./getItems.js');
+const _ = require('lodash');
+const BPromise = require('bluebird');
+const getItemsFromLbc = require('./crawl/getItems.js');
+const getItemFromLbc = require('./crawl/getItem.js');
 const hash = require('./hash.js');
 const urlHelper = require('url');
 
@@ -10,6 +13,7 @@ function create() {
   const that = {};
 
   that.getItems = getItems;
+  that.completeItems = completeItems;
 
   return that;
 
@@ -23,6 +27,16 @@ function create() {
       item.id = createIdFromUrl(item.href);
       return item;
     }
+  }
+
+  function completeItems(items) {
+    return BPromise.map(items, item => {
+      if (!item.href) {
+        throw new Error('Item need an href in order to be completed');
+      }
+      return getItemFromLbc(item.href)
+        .then(itemInfo => _.assign({}, item, itemInfo));
+    });
   }
 }
 
