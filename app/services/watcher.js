@@ -41,11 +41,11 @@ function create(parameters) {
   }
 
   function checkIfNewItems() {
+    logger.debug(`Looking for new items at ${url}...`);
     return leboncoinService.getItems(url)
       .then(itemMonitorService.detectUnseenItems)
       .then(leboncoinService.completeItems)
       .then(newItems => {
-        logger.debug(`Looking for new items at ${url}...`);
         if (newItems.length > 0) {
           callback(newItems);
         } else {
