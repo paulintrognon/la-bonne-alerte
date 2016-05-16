@@ -30,10 +30,13 @@ function create() {
   }
 
   function completeItems(items) {
-    return BPromise.map(items, item =>
-      getItemFromLbc(item.url)
-        .then(itemInfo => _.assign({}, item, itemInfo))
-    );
+    return BPromise.map(items, item => {
+      if (!item.href) {
+        throw new Error('Item need an href in order to be completed');
+      }
+      return getItemFromLbc(item.href)
+        .then(itemInfo => _.assign({}, item, itemInfo));
+    });
   }
 }
 

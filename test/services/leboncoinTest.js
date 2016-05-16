@@ -12,6 +12,7 @@ function getItemsSuite() {
 function completeItemsSuite() {
   it('should return an empty array if items is empty', emptyItemsTest);
   it('should call getItem per item given', completeItemsTest);
+  it('should throw an error if no href in items', noHrefTest);
 }
 
 const BPromise = require('bluebird');
@@ -69,8 +70,8 @@ function completeItemsTest(done) {
   const firstItem = { foo: 'first-item' };
   const secondItem = { foo: 'second-item' };
   const items = [
-    { id: 1 },
-    { id: 2 },
+    { href: 1 },
+    { href: 2 },
   ];
 
   getItemStub.onFirstCall().returns(BPromise.resolve(firstItem));
@@ -81,10 +82,25 @@ function completeItemsTest(done) {
   service.completeItems(items)
     .then(res => {
       should(getItemStub.callCount).equal(2);
+      should(getItemStub.firstCall.args[0]).equal(items[0].href);
+      should(getItemStub.secondCall.args[0]).equal(items[1].href);
       should(res).eql([
-        { foo: 'first-item', id: 1 },
-        { foo: 'second-item', id: 2 },
+        { foo: 'first-item', href: 1 },
+        { foo: 'second-item', href: 2 },
       ]);
+    })
+    .then(done, done);
+}
+
+function noHrefTest(done) {
+  const items = [{ url: 'foobar' }];
+  const service = createService({});
+
+  service.completeItems(items)
+    .then(() => {
+      throw new Error('should have thrown an exception');
+    }, err => {
+      should(err.message).equal('Item need an href in order to be completed');
     })
     .then(done, done);
 }
