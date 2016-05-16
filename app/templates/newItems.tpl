@@ -16,7 +16,7 @@
 <table style="border-collapse: collapse;border: 1px solid #AAAAAA;">
   {{#each items}}
   <tr>
-    <td style="height: 120px;min-width: 160px;">
+    <td style="height: 120px;min-width: 160px;padding-left: 10px;padding-top: 10px;">
       {{#if imageUrl}}
       <img
         alt="{{name}}"
@@ -31,11 +31,11 @@
       <p>{{location}}</p>
       <p>{{price}} - {{date}}</p>
     </td>
-    <tr style="border-bottom: 1px solid #AAAAAA;">
-      <td colspan="2" style="height: 120px;padding-left: 10px;">
+    <tr style="border-bottom: 5px solid #AAAAAA;">
+      <td colspan="2" style="height: 120px;padding-left: 10px;padding-bottom:20px;">
         {{#if images.length}}
         <p>
-          {{#each images}}
+          {{#each images as |image|}}
           <img
             style="height:120px;"
             alt="miniature"
@@ -45,7 +45,7 @@
         </p>
         {{/if}}
         <p>
-          {{description}}
+          {{{description}}}
         </p>
         <ul style="list-style-type: disc;">
           {{#each extra}}
